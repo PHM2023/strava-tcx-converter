@@ -1,0 +1,25 @@
+.log-section {
+  background: white;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.log-entry {
+  margin: 8px 0;
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+  font-family: monospace;
+  font-size: 14px;
+}
+
+.log-error {
+  color: #dc3545;
+  background-color: #fff5f5;
+}
+
+.log-success {
+  color: #28a745;
+  background-color: #f4fff5;
+} 
