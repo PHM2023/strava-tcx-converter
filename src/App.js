@@ -1,30 +1,31 @@
 import React, { useState } from 'react';
-import useStravaAuth from './hooks/useStravaAuth';
+import { useAuth } from './context/AuthContext';
 import CredentialsForm from './components/CredentialsForm';
 import './App.css';
 
 function App() {
-  const [clientSecret, setClientSecret] = useState('');
-  const { isAuthenticated, athlete, login, logout, needsCredentials } = useStravaAuth();
+  const [error, setError] = useState(null);
+  const { isAuthenticated, athlete, login, logout, loading } = useAuth();
 
-  const handleCredentials = ({ clientSecret }) => {
-    setClientSecret(clientSecret);
-    login(clientSecret);
+  const handleCredentials = async (credentials) => {
+    try {
+      await login(credentials);
+      setError(null);
+    } catch (err) {
+      setError(err.message);
+    }
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="App">
       <header className="App-header">
         <h1>Strava TCX Converter</h1>
         {!isAuthenticated ? (
-          needsCredentials ? (
-            <CredentialsForm 
-              onSubmit={handleCredentials}
-              clientId={process.env.REACT_APP_STRAVA_CLIENT_ID} 
-            />
-          ) : (
-            <div>Authenticating...</div>
-          )
+          <CredentialsForm onSubmit={handleCredentials} error={error} />
         ) : (
           <div>
             <p>Welcome, {athlete?.firstname}</p>
