@@ -1,5 +1,5 @@
 {
-  "name": "strava-converter-server",
+  "name": "strava-tcx-converter-server",
   "version": "1.0.0",
   "main": "server.js",
   "dependencies": {

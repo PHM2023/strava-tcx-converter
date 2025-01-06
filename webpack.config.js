@@ -1,11 +1,23 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
+const dotenv = require('dotenv');
+
+// Load environment variables
+const env = dotenv.config().parsed || {};
+const envKeys = {
+  'process.env': Object.keys(env).reduce((prev, next) => {
+    prev[next] = JSON.stringify(env[next]);
+    return prev;
+  }, {})
+};
 
 module.exports = {
   entry: './src/index.js',
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'build'),
     filename: 'bundle.js',
-    publicPath: ''
+    publicPath: '/'
   },
   module: {
     rules: [
@@ -15,10 +27,7 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: [
-              '@babel/preset-env',
-              ['@babel/preset-react', { runtime: 'automatic' }]
-            ]
+            presets: ['@babel/preset-env', '@babel/preset-react']
           }
         }
       },
@@ -28,20 +37,13 @@ module.exports = {
       }
     ]
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './public/index.html'
+    }),
+    new webpack.DefinePlugin(envKeys)
+  ],
   resolve: {
     extensions: ['.js', '.jsx']
-  },
-  devServer: {
-    static: {
-      directory: path.join(__dirname, 'public'),
-    },
-    port: 3000,
-    historyApiFallback: true,
-    hot: true,
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-      "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
-    }
   }
 }; 
